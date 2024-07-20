@@ -111,7 +111,8 @@ This setup provides a running RabbitMQ instance on your local machine, accessibl
 
 ## Adding the .env
 You will need to have a .env at the root of your project and provide the mongo db abd rabbitMQ URI you are running your instances from e.g
-````MONGO_URI=mongodb://localhost:27017/users
+````
+MONGO_URI=mongodb://localhost:27017/users
 RABBITMQ_URI=amqp://guest:guest@localhost:5672
 
 ````
