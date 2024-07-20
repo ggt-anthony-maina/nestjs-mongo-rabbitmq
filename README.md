@@ -117,7 +117,7 @@ RABBITMQ_URI=amqp://guest:guest@localhost:5672
 
 ````
 ## Running the app
-
+Please note that the application is set to run at: http://localhost:3000/ so for instance to retrieve a certain user Avatar, this would look like something like http://localhost:3000/users/669c193cf4bc03ca86faca68/Avatar
 ```bash
 # development
 $ npm run start
