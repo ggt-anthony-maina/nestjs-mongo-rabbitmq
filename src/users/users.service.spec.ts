@@ -48,7 +48,9 @@ describe('UsersService', () => {
         exec: jest.fn().mockResolvedValue(mockAvatar),
       }),
       create: jest.fn().mockResolvedValue(mockAvatar),
-      deleteOne: jest.fn().mockResolvedValue({}),
+      findOneAndDelete: jest.fn().mockReturnValue({
+        exec: jest.fn().mockResolvedValue(mockAvatar),
+      }),
     };
 
     const module: TestingModule = await Test.createTestingModule({
@@ -92,10 +94,14 @@ describe('UsersService', () => {
   it('should create a user and send RabbitMQ event', async () => {
     const createUserDto: CreateUserDto = { email: 'test@example.com', avatarUrl: 'http://someurl.com/avatar.png' };
 
+    const spyCreate = jest.spyOn(userModel, 'create');
+
     const result = await service.createUser(createUserDto);
 
     expect(result).toEqual(mockUser);
+    expect(spyCreate).toHaveBeenCalled();
     expect(rabbitMQService.sendTOQueue).toHaveBeenCalledWith('user_created', { userId: mockUser.id });
+  
   });
 
   it('should fetch a user', async () => {
@@ -114,8 +120,11 @@ describe('UsersService', () => {
   });
 
   it('should delete avatar for a user', async () => {
+    const spyFindOneAndDelete = jest.spyOn(avatarModel, 'findOneAndDelete');
+
     await service.deleteAvatar('669ac41e3c856e8b2c7a29b5');
+
     expect(avatarService.deleteAvatar).toHaveBeenCalledWith(mockAvatar.filePath);
-    expect(avatarModel.deleteOne).toHaveBeenCalledWith({ userId: '669ac41e3c856e8b2c7a29b5' });
+    expect(spyFindOneAndDelete).toHaveBeenCalledWith({ userId: '669ac41e3c856e8b2c7a29b5' });
   });
 });

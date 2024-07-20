@@ -25,8 +25,9 @@ export class UsersService{
     }
      
     async createUser(createUserDto: CreateUserDto): Promise<User> {
-        const user = new this.userModel(createUserDto);
-        await user.save();
+        const user = await this.userModel.create(createUserDto);
+
+        
 
    
      
@@ -74,10 +75,9 @@ export class UsersService{
     }
 
     async deleteAvatar(userId: string): Promise<void>{
-        const avatar = await this.avatarModel.findOne({userId}).exec();
-        if(avatar){
-            await this.avatarService.deleteAvatar(avatar.filePath);
-            await this.avatarModel.deleteOne({userId}).exec();
-        }
+        const avatar = await this.avatarModel.findOneAndDelete({ userId }).exec();
+    if (avatar) {
+      await this.avatarService.deleteAvatar(avatar.filePath);
+    }
     }
 }
